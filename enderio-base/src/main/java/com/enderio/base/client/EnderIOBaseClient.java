@@ -13,6 +13,7 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.core.client.item.FluidBarDecorator;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -53,6 +55,11 @@ public class EnderIOBaseClient {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         TravelTargetRendering.init();
+
+        event.enqueueWork(() -> {
+            ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
+                    (stack, level, player, seed) -> SoulVialItem.isFilled(stack) ? 1 : 0);
+        });
     }
 
     @SubscribeEvent
