@@ -2,7 +2,6 @@ package com.enderio.machines.common.blocks.obelisks.relocator;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
-import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -45,7 +44,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot((integer,
-                        itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
+                        itemStack) -> itemStack.getCapability(EIOCapabilities.SOUL_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -63,7 +62,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     }
 
     public boolean handleSpawnEvent(FinalizeSpawnEvent event) {
-        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
+        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.SOUL_FILTER);
         if (entityFilter != null && !entityFilter.test(event.getEntity())) {
             return false;
         }

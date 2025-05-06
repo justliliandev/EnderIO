@@ -2,7 +2,6 @@ package com.enderio.machines.common.blocks.obelisks.aversion;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
-import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -42,7 +41,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot((integer,
-                        itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
+                        itemStack) -> itemStack.getCapability(EIOCapabilities.SOUL_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -64,7 +63,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
             return false;
         }
 
-        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
+        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.SOUL_FILTER);
         if (entityFilter != null && !entityFilter.test(event.getEntity())) {
             return false;
         }

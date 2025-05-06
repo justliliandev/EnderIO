@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blocks.farming_station;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.farm.FarmInteraction;
@@ -90,7 +90,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     private AABBTicket ticket;
 
-    private StoredEntityData entityData = StoredEntityData.EMPTY;
+    private Soul boundSoul = Soul.EMPTY;
     @Nullable
     private FarmSoul.SoulData soulData;
     private static boolean reload = false;
@@ -151,8 +151,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && entityData != StoredEntityData.EMPTY && entityData.entityType().isPresent()) {
-            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(entityData.entityType().get());
+        if (reloadCache != reload && boundSoul != Soul.EMPTY && boundSoul.entityType().isPresent()) {
+            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(boundSoul.entityType().get());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -401,11 +401,11 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.entityType();
+        return boundSoul.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
-        entityData = StoredEntityData.of(entityType);
+        boundSoul = Soul.of(entityType);
     }
 
     @SubscribeEvent
@@ -433,7 +433,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
         }
 
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
     }
 
     @Override
@@ -448,7 +448,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             actionRange = DEFAULT_RANGE;
         }
 
-        entityData = StoredEntityData.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
     }
 
     @Override
@@ -460,7 +460,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             this.actionRange = actionRange;
         }
 
-        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
     }
 
     @Override
@@ -472,8 +472,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             components.set(MachineDataComponents.ACTION_RANGE, actionRange);
         }
 
-        if (entityData.hasEntity()) {
-            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        if (boundSoul.hasEntity()) {
+            components.set(EIODataComponents.SOUL, boundSoul);
         }
     }
 }
