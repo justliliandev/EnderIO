@@ -2,6 +2,7 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.client.decorator.GlassIconDecorator;
 import com.enderio.base.client.paint.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
@@ -58,7 +59,7 @@ public class EnderIOBaseClient {
 
         event.enqueueWork(() -> {
             ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
-                    (stack, level, player, seed) -> SoulVialItem.isFilled(stack) ? 1 : 0);
+                    (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
         });
     }
 
